@@ -6,136 +6,117 @@ import { Link } from "react-router-dom";
 
 import { retrievePets, deletePet } from "../actions/actions";
 
+import { Table, Button } from "react-bootstrap";
+
+const listRow = {
+  padding: "2rem",
+};
+
 class PetList extends Component {
+  componentDidMount() {
+    this.props.retrievePets();
+  }
 
- componentDidMount() {
+  removePet = (id) => {
+    this.props.deletePet(id).then(() => {
+      this.props.retrievePets();
+    });
+  };
 
-   this.props.retrievePets();
+  render() {
+    const { pets } = this.props;
 
- }
+    return (
+      <div style={listRow}>
+        <h4>Pet List</h4>
+        <div className="col-md-6">
+          <div>
+            <Link to="/add-pet">
+              <Button style={{ marginBottom: 12 }} variant="primary">
+                Add pet
+              </Button>
+            </Link>
+          </div>
 
- removePet = (id) => {
+          <Table responsive striped bordered hover className="u-full-width">
+            <thead>
+              <tr>
+                <th>Name</th>
 
-   this.props.deletePet(id).then(() => {
+                <th>Animal</th>
 
-     this.props.retrievePets();
+                <th>Breed</th>
 
-   });
+                <th>Location</th>
 
- };
+                <th>Age</th>
 
- render() {
+                <th>Gender</th>
 
-   const { pets } = this.props;
+                <th>Actions</th>
+              </tr>
+            </thead>
 
-   return (
+            <tbody>
+              {pets &&
+                pets.map(
+                  ({ id, name, animal, breed, location, age, gender }, i) => (
+                    <tr key={i}>
+                      <td>{name}</td>
 
-     <div className="list row">
+                      <td>{animal}</td>
 
-       <div className="col-md-6">
+                      <td>{breed}</td>
 
-         <h4>Pet List</h4>
+                      <td>{location}</td>
 
-         <div>
+                      <td>{age}</td>
 
-           <Link to="/add-pet">
+                      <td>{gender}</td>
 
-             <button className="button-primary">Add pet</button>
+                      <td>
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          style={{ marginTop: 0 }}
+                          onClick={() => this.removePet(id)}
+                        >
+                          Delete
+                        </Button>
 
-           </Link>
-
-         </div>
-
-         <table className="u-full-width">
-
-           <thead>
-
-             <tr>
-
-               <th>Name</th>
-
-               <th>Animal</th>
-
-               <th>Breed</th>
-
-               <th>Location</th>
-
-               <th>Age</th>
-
-               <th>Sex</th>
-
-               <th>Actions</th>
-
-             </tr>
-
-           </thead>
-
-           <tbody>
-
-             {pets &&
-
-               pets.map(
-
-                 ({ id, name, animal, breed, location, age, sex }, i) => (
-
-                   <tr key={i}>
-
-                     <td>{name}</td>
-
-                     <td>{animal}</td>
-
-                     <td>{breed}</td>
-
-                     <td>{location}</td>
-
-                     <td>{age}</td>
-
-                     <td>{sex}</td>
-
-                     <td>
-
-                       <button onClick={() => this.removePet(id)}>
-
-                         Delete
-
-                       </button>
-
-                       <Link to={`/edit-pet/${id}`}>
-
-                         <button>Edit</button>
-
-                       </Link>
-
-                     </td>
-
-                   </tr>
-
-                 )
-
-               )}
-
-           </tbody>
-
-         </table>
-
-       </div>
-
-     </div>
-
-   );
-
- }
-
+                        <Button
+                          variant="secondary"
+                          size="sm"
+                          style={{ marginLeft: 12, marginTop: 0 }}
+                        >
+                          <Link
+                            to={{
+                              pathname: `/edit-pet`,
+                              state: {
+                                id: id,
+                              },
+                            }}
+                            className="link"
+                          >
+                            Edit
+                          </Link>
+                        </Button>
+                      </td>
+                    </tr>
+                  )
+                )}
+            </tbody>
+          </Table>
+        </div>
+      </div>
+    );
+  }
 }
 
 const mapStateToProps = (state) => {
-
- return {
-
-   pets: state.pets,
-
- };
-
+  return {
+    pets: state.pets,
+  };
 };
 
 export default connect(mapStateToProps, { retrievePets, deletePet })(PetList);

@@ -2,7 +2,8 @@
   "kind": "collectionType",
   "collectionName": "pets",
   "info": {
-    "name": "pet"
+    "name": "pet",
+    "description": ""
   },
   "options": {
     "increments": true,
@@ -34,9 +35,21 @@
     "gender": {
       "type": "enumeration",
       "enum": [
-        "male",
-        "female"
+        "Male",
+        "Female"
       ]
+    },
+    "image": {
+      "collection": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos"
+      ],
+      "plugin": "upload",
+      "required": false,
+      "pluginOptions": {}
     }
   }
 }
